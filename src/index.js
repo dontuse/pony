@@ -22,7 +22,8 @@ let ponys = [];
             "color": colors[Math.floor(Math.random() * colors.length)],
             "kind": kinds[Math.floor(Math.random() * kinds.length)],
             "price": _.random(1, 1000000, 2).toFixed(2),
-            "is_new": isNew[Math.floor(Math.random() * isNew.length)]
+            "is_new": isNew[Math.floor(Math.random() * isNew.length)],
+            "id" : i
         };
 
         ponys.push(pony)
@@ -195,7 +196,7 @@ class PonyApp extends React.Component {
                         <div>
                             {this.state.ponys.map((pony)=> {
                                 return (
-                                    <Well>
+                                    <Well key={pony.id}>
                                         <div>
                                             <b>name: </b>{pony.name}</div>
                                         <div>

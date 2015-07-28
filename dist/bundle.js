@@ -82,7 +82,8 @@
 	            "color": colors[Math.floor(Math.random() * colors.length)],
 	            "kind": kinds[Math.floor(Math.random() * kinds.length)],
 	            "price": _lodash2['default'].random(1, 1000000, 2).toFixed(2),
-	            "is_new": isNew[Math.floor(Math.random() * isNew.length)]
+	            "is_new": isNew[Math.floor(Math.random() * isNew.length)],
+	            "id": i
 	        };
 
 	        ponys.push(pony);
@@ -307,7 +308,7 @@
 	                        this.state.ponys.map(function (pony) {
 	                            return _react2['default'].createElement(
 	                                _reactBootstrap.Well,
-	                                null,
+	                                { key: pony.id },
 	                                _react2['default'].createElement(
 	                                    'div',
 	                                    null,
