@@ -1,0 +1,90 @@
+/files/
+/cache/
+/log/
+/files/
+/images/*/*
+!/images/product/no_foto.jpg
+/.idea/
+/yandex_market/
+/yml/
+/news/
+/lib/*
+/lib/sphinx/
+!/lib/smarty/
+!/lib/kcaptcha/
+/lib/smarty/templates_c/*tpl*
+/lib/smarty/cache/*tpl*
+/1c/backup/
+/1c/*txt
+/1c/*.xml
+/1c/*.csv
+/1c/calculate_date_delivery/*.xml
+/admin/experiment.php
+/admin/experiment_files/
+/admin/for_experiment.php
+/procedure/geoip/
+/static/*.html
+/static/publish/
+robots-*
+sitemap-*
+
+# Andrey added this
+*.diff
+*.err
+*.orig
+*.log
+*.rej
+*.swo
+*.swp
+*.vi
+*~
+*.sass-cache
+
+# OS or Editor folders
+.DS_Store
+._*
+Thumbs.db
+.cache
+.project
+.settings
+.tmproj
+nbproject
+*.sublime-project
+*.sublime-workspace
+
+# Dreamweaver added files
+_notes
+dwsync.xml
+
+# Komodo
+*.komodoproject
+.komodotools
+
+# Espresso
+*.esproj
+*.espressostorage
+
+# Rubinius
+*.rbc
+
+# Folders to ignore
+.git
+.hg
+.svn
+.CVS
+intermediate
+.idea
+
+# Node.JS
+pids
+logs
+results
+
+node_modules
+npm-debug.log
+
+
+# Vagrant files
+.vagrant
+Vagrantfile
+
