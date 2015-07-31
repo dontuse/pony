@@ -1,11 +1,10 @@
-var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var config = require('./webpack.config.js');
-var compiler = webpack(config);
+var webpack = require('webpack');
 var devServer = new WebpackDevServer(
-    compiler,
+    webpack(config),
     {
         contentBase: __dirname,
-        publicPath: '/'
+        publicPath: '/dist/'
     }
 ).listen(8088, 'localhost');
