@@ -2,77 +2,9 @@
 
 import React from 'react';
 import {Modal,Button, Input, Grid, Row, Col, Well} from 'react-bootstrap';
-import _ from 'lodash';
-//import ponys from './ponys.json';
-let EventEmitter = require('events').EventEmitter;
 
-let ponys = [];
-
-/*----------------------*/
-
-(function () {
-    let names = ['Гуфи', 'Нина', 'Марина', 'Франклибукирун', 'Малышок', 'Бетман', 'Спуди'];
-    let colors = ['Зеленый', 'Красный', 'Синий', 'Желтый'];
-    let kinds = ['Земная пони', 'Единорог', 'Пегас' , 'Аликорн'];
-    let isNew = [true , false];
-
-    for (let i = 0; i < 1000; i++) {
-        let pony = {
-            "name": names[Math.floor(Math.random() * names.length)],
-            "color": colors[Math.floor(Math.random() * colors.length)],
-            "kind": kinds[Math.floor(Math.random() * kinds.length)],
-            "price": _.random(1, 1000000, 2).toFixed(2),
-            "is_new": isNew[Math.floor(Math.random() * isNew.length)],
-            "id" : i
-        };
-
-        ponys.push(pony)
-    }
-}());
-
-/*------------------------*/
-
-let actions = new EventEmitter();
-let viewEmiter = new EventEmitter();
-
-
-let colors = _(ponys).pluck('color').uniq().value();
-let kind = _(ponys).pluck('kind').uniq().value();
-
-console.log(colors);
-console.log(kind);
-
-
-function ponyFilter(where) {
-    let q = {};
-    let filteredPonys;
-
-    where.minPrice = where.minPrice || 0;
-    where.maxPrice = where.maxPrice || Number.MAX_SAFE_INTEGER;
-    where.count = where.count || 20;
-
-
-    _.forEach(where, (val, index) => {
-        if (!(val === "") && !(index === "maxPrice") && !(index === "minPrice") && !(index === "count")) {
-            q[index] = val;
-        }
-    });
-
-    console.log('query', q);
-
-    filteredPonys = _.where(ponys, q).filter((pony) => {
-        return (pony.price >= where.minPrice && pony.price <= where.maxPrice)
-    });
-
-    filteredPonys = _.sample(filteredPonys, where.count);
-
-    return filteredPonys;
-}
-
-actions.on('ponyFilter', (obj) => {
-    let ponys = ponyFilter(obj);
-    viewEmiter.emit('updateView', ponys);
-});
+import PonyStore from '../stores/PonyStore.js';
+import PonysActions from '../actions/PonysActions.js';
 
 
 class PonyApp extends React.Component {
@@ -80,25 +12,23 @@ class PonyApp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal: false,
-            ponys: []
+            showModal: true,
+            ponys: PonyStore.filter({})
         };
-        this.ponyColors = colors;
-        this.ponyKinds = kind;
+        this.ponyColors = PonyStore.getColors();
+        this.ponyKinds = PonyStore.getKinds();
 
-        viewEmiter.on('updateView', (ponys)=> {
-            this.setState({
-                ponys: ponys
-            });
-        });
     }
 
     componentWillMount() {
-        actions.emit('ponyFilter', {});
+        PonyStore.addChangeListener(this._onChange);
+    }
+
+    componentWillUnmount() {
+        PonyStore.removeChangeListener(this._onChange);
     }
 
     close() {
-        console.log('close');
         this.setState({showModal: false});
 
     }
@@ -116,15 +46,23 @@ class PonyApp extends React.Component {
         let is_new = this.refs.ponyIsNew.getValue();
         let count = this.refs.ponyCount.getValue();
 
-        if(is_new === "true") {
+        if (is_new === "true") {
             is_new = true
         }
         else if (is_new === "false") {
             is_new = false
         }
 
-        actions.emit('ponyFilter', {color, kind, maxPrice, minPrice, is_new , count});
+        this.setState({
+            ponys: PonyStore.filter({color, kind, maxPrice, minPrice, is_new, count})
+        });
     }
+
+    _onChange = () => {
+        //this.state = {
+          //  ponys: PonysActions.filter({color, kind, maxPrice, minPrice, is_new, count});
+        //};
+    };
 
     render() {
         return (
@@ -206,8 +144,8 @@ class PonyApp extends React.Component {
                                         <div>
                                             <b>Price:</b> {pony.price} рупий</div>
                                         <div>
-                                            {console.log(pony.is_new)}
-                                            <b>новый ?</b>:{pony.is_new ? "ДА" : "НЕТ"}</div>
+                                            <b>новый ?</b>
+                                            :{pony.is_new ? "ДА" : "НЕТ"}</div>
                                     </Well>
 
                                 )
@@ -225,5 +163,4 @@ class PonyApp extends React.Component {
 }
 
 
-
-React.render(<PonyApp></PonyApp>, document.getElementById('app'));
+export default PonyApp;

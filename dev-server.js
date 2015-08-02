@@ -7,4 +7,4 @@ var devServer = new WebpackDevServer(
         contentBase: __dirname,
         publicPath: '/dist/'
     }
-).listen(8088, 'localhost');
+).listen(8090, 'localhost');

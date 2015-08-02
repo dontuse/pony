@@ -3,13 +3,13 @@ var webpack = require('webpack');
 
 module.exports = {
     context: path.join(__dirname, 'src'),
-    entry: './index.js',
+    entry: './app.js',
     output: {
         path: path.join(__dirname, 'dist')
     },
     module: {
         loaders: [
-            { test: /\.js$/, exclude: /node_modules/, loader: 'babel?loose=all' },
+            { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
             {test: /\.json$/, loader: 'json-loader'}
         ]
     },
