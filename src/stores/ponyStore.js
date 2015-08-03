@@ -37,9 +37,12 @@ let ponys = [];
 let colors = _(ponys).pluck('color').uniq().value();
 let kind = _(ponys).pluck('kind').uniq().value();
 let filteredPonys = [];
+let query = {};
 
 function ponyFilter(where) {
     let q = {};
+
+    query = where;
 
     where.minPrice = where.minPrice || 0;
     where.maxPrice = where.maxPrice || Number.MAX_SAFE_INTEGER;
@@ -86,6 +89,10 @@ let PonyStore = Object.assign({}, EventEmitter.prototype, {
 
     getKinds: function () {
         return kind;
+    },
+
+    getSelected() {
+        return query;
     },
 
     emitChange: function () {

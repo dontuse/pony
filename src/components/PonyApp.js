@@ -1,7 +1,7 @@
 "use strict";
 
 import React from 'react';
-import {Modal,Button, Input, Grid, Row, Col, Well} from 'react-bootstrap';
+import {Modal,Button, Input, Grid, Row, Col, Well, PageHeader , Nav, NavItem} from 'react-bootstrap';
 
 import PonyStore from '../stores/PonyStore.js';
 import PonysActions from '../actions/PonysActions.js';
@@ -12,11 +12,14 @@ class PonyApp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal: true,
+            showModal: false,
+            selected: PonyStore.getSelected(),
             ponys: PonyStore.getFilteredPonys(),
             ponyColors: PonyStore.getColors(),
             ponyKinds: PonyStore.getKinds()
         };
+
+        console.log(this.state.selected);
     }
 
     componentWillMount() {
@@ -64,26 +67,33 @@ class PonyApp extends React.Component {
 
     render() {
         return (
-            <div>
-                <a onClick={this.open.bind(this)} href="">Позови пони</a>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <a onClick={this.open.bind(this)} href="">Позови пони Еще как то</a>
+            <section className="container">
+                <PageHeader>Pony Land</PageHeader>
+                <div className="row">
 
-                <Modal bsSize='large' show={this.state.showModal} onHide={this.close.bind(this)}>
-                    <Modal.Header>
-                        <Modal.Title>Купи пони</Modal.Title>
-                    </Modal.Header>
+                    <div className="col-md-3">
+                        <Nav bsStyle='pills' stacked activeKey={1} onSelect={function () {
+                        }}>
+                            <NavItem eventKey={1} href='/home'>NavItem 1 content</NavItem>
+                            <NavItem eventKey={2} title='Item'>NavItem 2 content</NavItem>
+                            <NavItem eventKey={3} disabled>NavItem 3 content</NavItem>
+                        </Nav>
+                    </div>
+                    <div className="col-md-9">
+                        <Well>
+                            <a onClick={this.open.bind(this)} href="">Позови пони</a>
 
-                    <Modal.Body>
+                            <a onClick={this.open.bind(this)} href="">Позови пони Еще как то</a>
+                        </Well>
+
+
                         <div onChange={this.filter.bind(this)}>
 
 
                             <Row>
                                 <Col xs={6}>
                                     <Input
+                                        defaultValue={this.state.selected.color}
                                         ref="ponyColor"
                                         type='select'
                                         label='Цвет пони'
@@ -96,6 +106,7 @@ class PonyApp extends React.Component {
                                         <option selected value=''>...</option>
                                     </Input>
                                     <Input
+                                        defaultValue={this.state.selected.kind}
                                         ref='ponyKind'
                                         type='select' label='Вид' placeholder='select'>
                                 {this.state.ponyKinds.map((kind)=> {
@@ -106,6 +117,7 @@ class PonyApp extends React.Component {
                                         <option selected value=''>...</option>
                                     </Input>
                                     <Input
+                                        defaultValue={this.state.selected.is_new}
                                         ref='ponyIsNew'
                                         type='select' label='Новинка' placeholder='select'>
                                         <option value={true}>да</option>
@@ -115,14 +127,17 @@ class PonyApp extends React.Component {
                                 </Col>
                                 <Col xs={6}>
                                     <Input
+                                        defaultValue={this.state.selected.minPrice}
                                         ref='ponyMinPrice'
                                         type='number' label='Цена min' placeholder=''>
                                     </Input>
                                     <Input
+                                        defaultValue={this.state.selected.maxPrice}
                                         ref='ponyMaxPrice'
                                         type='number' label='Цена max' placeholder=''>
                                     </Input>
                                     <Input
+                                        defaultValue={this.state.selected.count}
                                         ref='ponyCount'
                                         type='number' label='Сколько пони показать ?' placeholder=''>
                                     </Input>
@@ -149,13 +164,24 @@ class PonyApp extends React.Component {
                                 )
                             })}
                         </div>
-                    </Modal.Body>
 
-                    <Modal.Footer>
-                        <Button onClick={this.close.bind(this)}>Close</Button>
-                    </Modal.Footer>
-                </Modal>
-            </div>
+
+                        <Modal bsSize='large' show={this.state.showModal} onHide={this.close.bind(this)}>
+                            <Modal.Header>
+                                <Modal.Title>Купи пони</Modal.Title>
+                            </Modal.Header>
+
+                            <Modal.Body>
+                                d
+                            </Modal.Body>
+
+                            <Modal.Footer>
+                                <Button onClick={this.close.bind(this)}>Close</Button>
+                            </Modal.Footer>
+                        </Modal>
+                    </div>
+                </div>
+            </section>
         );
     }
 }
