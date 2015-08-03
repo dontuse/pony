@@ -13,11 +13,10 @@ class PonyApp extends React.Component {
         super(props);
         this.state = {
             showModal: true,
-            ponys: PonyStore.filter({})
+            ponys: PonyStore.getFilteredPonys(),
+            ponyColors: PonyStore.getColors(),
+            ponyKinds: PonyStore.getKinds()
         };
-        this.ponyColors = PonyStore.getColors();
-        this.ponyKinds = PonyStore.getKinds();
-
     }
 
     componentWillMount() {
@@ -53,15 +52,14 @@ class PonyApp extends React.Component {
             is_new = false
         }
 
-        this.setState({
-            ponys: PonyStore.filter({color, kind, maxPrice, minPrice, is_new, count})
-        });
+        PonysActions.filter({color, kind, maxPrice, minPrice, is_new, count});
     }
 
     _onChange = () => {
-        //this.state = {
-          //  ponys: PonysActions.filter({color, kind, maxPrice, minPrice, is_new, count});
-        //};
+        console.log('_change', PonyStore.getFilteredPonys());
+        this.setState({
+            ponys: PonyStore.getFilteredPonys()
+        });
     };
 
     render() {
@@ -90,7 +88,7 @@ class PonyApp extends React.Component {
                                         type='select'
                                         label='Цвет пони'
                                         placeholder='Цвет пони'>
-                                {this.ponyColors.map((color)=> {
+                                {this.state.ponyColors.map((color)=> {
                                     return (
                                         <option key={color} selected={color} value={color}>{color}</option>
                                     )
@@ -100,7 +98,7 @@ class PonyApp extends React.Component {
                                     <Input
                                         ref='ponyKind'
                                         type='select' label='Вид' placeholder='select'>
-                                {this.ponyKinds.map((kind)=> {
+                                {this.state.ponyKinds.map((kind)=> {
                                     return (
                                         <option key={kind} selected={kind} value={kind}>{kind}</option>
                                     )
