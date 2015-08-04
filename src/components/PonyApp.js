@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {Modal,Button, Input, Grid, Row, Col, Well, PageHeader , Nav, NavItem} from 'react-bootstrap';
-
+import _ from 'lodash';
 import PonyStore from '../stores/PonyStore.js';
 import PonysActions from '../actions/PonysActions.js';
 
@@ -40,7 +40,8 @@ class PonyApp extends React.Component {
         this.setState({showModal: true});
     }
 
-    filter() {
+    filter = (e) => {
+        let target = e.target;
         let color = this.refs.ponyColor.getValue();
         let kind = this.refs.ponyKind.getValue();
         let maxPrice = +this.refs.ponyMaxPrice.getValue();
@@ -55,8 +56,16 @@ class PonyApp extends React.Component {
             is_new = false
         }
 
+        /*if(target.tagName === "INPUT") {
+            console.log('THROTTLE');
+            _.throttle(() => {
+                PonysActions.filter({color, kind, maxPrice, minPrice, is_new, count})
+            } , 200);
+
+        }*/
+
         PonysActions.filter({color, kind, maxPrice, minPrice, is_new, count});
-    }
+    };
 
     _onChange = () => {
         console.log('_change', PonyStore.getFilteredPonys());
@@ -74,8 +83,8 @@ class PonyApp extends React.Component {
                     <div className="col-md-3">
                         <Nav bsStyle='pills' stacked activeKey={1} onSelect={function () {
                         }}>
-                            <NavItem eventKey={1} href='/home'>NavItem 1 content</NavItem>
-                            <NavItem eventKey={2} title='Item'>NavItem 2 content</NavItem>
+                            <NavItem eventKey={1} href='/home'>Пони Каталог</NavItem>
+                            <NavItem eventKey={2} title='Item'>Что такое Пони ?</NavItem>
                             <NavItem eventKey={3} disabled>NavItem 3 content</NavItem>
                         </Nav>
                     </div>
@@ -87,7 +96,7 @@ class PonyApp extends React.Component {
                         </Well>
 
 
-                        <div onChange={this.filter.bind(this)}>
+                        <div onChange={this.filter}>
 
 
                             <Row>

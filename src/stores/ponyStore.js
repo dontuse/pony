@@ -14,7 +14,7 @@ let ponys = [];
 
 (function () {
     let names = ['Гуфи', 'Нина', 'Марина', 'Франклибукирун', 'Малышок', 'Бетман', 'Спуди'];
-    let colors = ['Зеленый', 'Красный', 'Синий', 'Желтый'];
+    let colors = ['Зеленый', 'Красный', 'Синий', 'Желтый', 'Алый'];
     let kinds = ['Земная пони', 'Единорог', 'Пегас', 'Аликорн'];
     let isNew = [true, false];
 
@@ -34,22 +34,27 @@ let ponys = [];
 
 /*------------------------*/
 
-let colors = _(ponys).pluck('color').uniq().value();
-let kind = _(ponys).pluck('kind').uniq().value();
+let colors = _(ponys).pluck('color').uniq().sort().value();
+let kind = _(ponys).pluck('kind').uniq().sort().value();
+
 let filteredPonys = [];
 let query = {};
 
-function ponyFilter(where) {
+function ponyFilter(query) {
     let q = {};
 
-    query = where;
+    query = query;
 
-    where.minPrice = where.minPrice || 0;
-    where.maxPrice = where.maxPrice || Number.MAX_SAFE_INTEGER;
-    where.count = where.count || 20;
+    query.minPrice = query.minPrice || 0;
+    query.maxPrice = query.maxPrice || Number.MAX_SAFE_INTEGER;
+    query.count = query.count || 20;
+
+    let {maxPrice,minPrice,count,kind,color} = query;
+
+    console.log(maxPrice,minPrice,count,kind,color);
 
 
-    _.forEach(where, (val, index) => {
+    _.forEach(query, (val, index) => {
         if (!(val === "") && !(index === "maxPrice") && !(index === "minPrice") && !(index === "count")) {
             q[index] = val;
         }
@@ -58,12 +63,16 @@ function ponyFilter(where) {
     console.log('query', q);
 
     filteredPonys = _.where(ponys, q).filter((pony) => {
-        return (pony.price >= where.minPrice && pony.price <= where.maxPrice)
+        return (pony.price >= query.minPrice && pony.price <= query.maxPrice)
     });
 
-    filteredPonys = _.sample(filteredPonys, where.count);
+    filteredPonys = _.sample(filteredPonys, query.count);
 
     return filteredPonys;
+}
+
+function saveFilterParams() {
+    localStorage.setItem("ponyFilter", query);
 }
 
 ponyFilter({});
@@ -71,23 +80,20 @@ ponyFilter({});
 
 let PonyStore = Object.assign({}, EventEmitter.prototype, {
 
-    /**
-     * Get the entire collection of TODOs.
-     * @return {array}
-     */
     getAll: function () {
         return ponys;
     },
 
-    getFilteredPonys: function () {
+    getFilteredPonys () {
+        saveFilterParams();
         return filteredPonys;
     },
 
-    getColors: function () {
+    getColors() {
         return colors;
     },
 
-    getKinds: function () {
+    getKinds() {
         return kind;
     },
 
@@ -95,13 +101,10 @@ let PonyStore = Object.assign({}, EventEmitter.prototype, {
         return query;
     },
 
-    emitChange: function () {
+    emitChange() {
         this.emit(CHANGE_EVENT);
     },
 
-    /**
-     * @param {function} callback
-     */
     addChangeListener: function (callback) {
         this.on(CHANGE_EVENT, callback);
     },
